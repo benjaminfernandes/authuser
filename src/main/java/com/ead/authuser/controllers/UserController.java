@@ -5,6 +5,7 @@ import com.ead.authuser.models.UserModel;
 import com.ead.authuser.services.UserService;
 import com.ead.authuser.specifications.SpecificationTemplate;
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 import java.util.UUID;
 
+@Log4j2
 @RestController
 @CrossOrigin(origins = "*", maxAge =  3600)//pode ser colocado globalmente atraves de config. Tem no ESR Algaworks
 @RequestMapping("/users")
@@ -57,11 +59,14 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable(value = "userId") UUID userId){
+        log.debug("DELETE deleteUser userId received {}", userId);
         Optional<UserModel> userModelOptional = existsUser(userId);
         if(!userModelOptional.isPresent()) {
             return status(NOT_FOUND).body("User not found");
         } else {
             this.userService.delete(userModelOptional.get());
+            log.debug("DELETE User userId deleted {}", userId);
+            log.info("DELETED successfully userId {}", userId);
             return status(OK).body("User deleted successful");
         }
     }
@@ -70,6 +75,8 @@ public class UserController {
     public ResponseEntity<?> updateUser(@PathVariable(value = "userId") UUID userId,
                                        @RequestBody @Validated(UserDto.UserView.UserPut.class)
                                        @JsonView(UserDto.UserView.UserPut.class) UserDto userDto){
+
+        log.debug("PUT updateUser userDto received {}", userDto.toString());
 
         Optional<UserModel> userModelOptional = existsUser(userId);
         if(!userModelOptional.isPresent()) {
@@ -81,6 +88,8 @@ public class UserController {
             userModel.setCpf(userDto.getCpf());
 
             this.userService.save(userModel);
+            log.debug("POST UpdateUser userDto saved {}", userModel.getUserId());
+            log.info("Updated successfully userId {}", userModel.getUserId());
             return status(OK).body(userModel);
         }
     }
@@ -90,16 +99,21 @@ public class UserController {
                                        @RequestBody @Validated(UserDto.UserView.PasswordPut.class)
                                        @JsonView(UserDto.UserView.PasswordPut.class) UserDto userDto){
 
+        log.debug("PUT updatePassword userId received {}", userId);
+
         Optional<UserModel> userModelOptional = existsUser(userId);
         if(!userModelOptional.isPresent()) {
             return status(NOT_FOUND).body("User not found");
         } if(!userModelOptional.get().getPassword().equals(userDto.getOldPassword())){
+            log.warn("Mismatched old password userId {} ", userId);
             return status(HttpStatus.CONFLICT).body("Error: Mismatched old password");
         } else {
             var userModel = userModelOptional.get();
             userModel.setPassword(userDto.getPassword());
 
             this.userService.save(userModel);
+            log.debug("Password updated successfully userId {}", userId);
+            log.info("Password updated successfully userId {}", userId);
             return status(OK).body("Password updated successfully");
         }
     }
@@ -109,6 +123,8 @@ public class UserController {
                                          @RequestBody @Validated(UserDto.UserView.ImagePut.class)
                                          @JsonView(UserDto.UserView.ImagePut.class) UserDto userDto){
 
+        log.debug("PUT updateImage userId received {}", userId);
+
         Optional<UserModel> userModelOptional = existsUser(userId);
         if(!userModelOptional.isPresent()) {
             return status(NOT_FOUND).body("User not found");
@@ -117,6 +133,8 @@ public class UserController {
             userModel.setImageUrl(userDto.getImageUrl());
 
             this.userService.save(userModel);
+            log.debug("Image updated successfully userId {}", userId);
+            log.info("Image updated successfully userId {}", userId);
             return status(OK).body(userModel);
         }
     }
