@@ -1,4 +1,4 @@
-package com.ead.authuser.models;
+package com.ead.authuser.enums;
 
 public enum UserType {
     ADMIN,
