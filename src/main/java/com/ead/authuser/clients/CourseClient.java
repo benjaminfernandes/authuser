@@ -5,6 +5,7 @@ import com.ead.authuser.dtos.ResponsePageDto;
 import com.ead.authuser.services.UtilsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,18 +19,20 @@ import java.util.UUID;
 
 @Slf4j
 @Component
-public class UserClient {
+public class CourseClient {
 
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
     private UtilsService utilsService;
+    @Value("${ead.api.url.course}")
+    private String requestUriCourse;
 
     //Utilizando API Composition Pattern
     public Page<CourseDto> getAllCoursesByUser(UUID userId, Pageable pageable){
         //List<CourseDto> searchResult = null;
         ResponseEntity<ResponsePageDto<CourseDto>> result = null;
-        String url = this.utilsService.createUrl(userId, pageable);
+        String url = requestUriCourse + this.utilsService.createUrl(userId, pageable);
 
         log.debug("Request URL: {}", url);
         log.info("Request URL: {}", url);

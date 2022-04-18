@@ -76,4 +76,9 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
         setUserType(UserType.INSTRUCTOR);
     }
 
+    public UserCourseModel convertToUserCourseModel(UUID courseId){
+        return new UserCourseModel.UserCourseModelBuilder().courseId(courseId)
+                .user(this).build();
+    }
+
 }

@@ -1,12 +1,14 @@
 package com.ead.authuser.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.UUID;
 
+@Builder
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
