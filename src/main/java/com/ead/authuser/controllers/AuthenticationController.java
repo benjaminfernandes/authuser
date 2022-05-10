@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.ResponseEntity.status;
 
-@Log4j2
+//@Log4j2
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-    //Logger log = LogManager.getLogger(AuthenticationController.class);//substituido pelo lombok
+    Logger log = LogManager.getLogger(AuthenticationController.class);//substituido pelo lombok
 
     //TODO Melhorar método registerUser() retirando os if's utilizando exceptions customizadas com o ExceptionHandler
     @Autowired

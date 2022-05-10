@@ -50,8 +50,4 @@ public class CourseClient {
         return result.getBody();
     }
 
-    public void deleteUserInCourse(UUID userId) {
-        String url = requestUriCourse + "/courses/users/" + userId;
-        this.restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
-    }
 }
