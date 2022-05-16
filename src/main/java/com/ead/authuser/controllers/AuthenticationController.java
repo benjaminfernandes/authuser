@@ -51,7 +51,7 @@ public class AuthenticationController {
         userModel.setUserAsStudent();
         //userModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC"))); //adicionado anotação no UserModel
         //userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-        this.userService.save(userModel);
+        this.userService.saveUser(userModel);
         log.debug("RegisterUser UserId saved {}", userModel.getUserId());
         log.info("Saved successfully userId {}", userModel.getUserId());
         return status(HttpStatus.CREATED).body(userModel);

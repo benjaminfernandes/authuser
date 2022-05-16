@@ -18,4 +18,5 @@ public interface UserService {
     public boolean existsByUsername(String username);
     public boolean  existsByEmail(String email);
     public Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable);
+    public UserModel saveUser(UserModel userModel);
 }
