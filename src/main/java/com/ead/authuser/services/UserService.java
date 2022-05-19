@@ -14,9 +14,12 @@ public interface UserService {
     public List<UserModel> findAll();
     public Optional<UserModel> findById(UUID userId);
     public void delete(UserModel user);
-    public void save(UserModel userModel);
+    public UserModel save(UserModel userModel);
     public boolean existsByUsername(String username);
     public boolean  existsByEmail(String email);
     public Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable);
     public UserModel saveUser(UserModel userModel);
+    public void deleteUser(UserModel userModel);
+    public UserModel updateUser(UserModel userModel);
+    public UserModel updatePassword(UserModel userModel);
 }

@@ -66,7 +66,7 @@ public class UserController {
         if(userModelOptional.isEmpty()) {
             return status(NOT_FOUND).body("User not found");
         } else {
-            this.userService.delete(userModelOptional.get());
+            this.userService.deleteUser(userModelOptional.get());
             log.debug("DELETE User userId deleted {}", userId);
             log.info("DELETED successfully userId {}", userId);
             return status(OK).body("User deleted successful");
@@ -89,7 +89,7 @@ public class UserController {
             userModel.setPhoneNumber(userDto.getPhoneNumber());
             userModel.setCpf(userDto.getCpf());
 
-            this.userService.save(userModel);
+            this.userService.updateUser(userModel);
             log.debug("POST UpdateUser userDto saved {}", userModel.getUserId());
             log.info("Updated successfully userId {}", userModel.getUserId());
             return status(OK).body(userModel);
@@ -113,7 +113,7 @@ public class UserController {
             var userModel = userModelOptional.get();
             userModel.setPassword(userDto.getPassword());
 
-            this.userService.save(userModel);
+            this.userService.updatePassword(userModel);
             log.debug("Password updated successfully userId {}", userId);
             log.info("Password updated successfully userId {}", userId);
             return status(OK).body("Password updated successfully");
@@ -134,7 +134,7 @@ public class UserController {
             var userModel = userModelOptional.get();
             userModel.setImageUrl(userDto.getImageUrl());
 
-            this.userService.save(userModel);
+            this.userService.updateUser(userModel);
             log.debug("Image updated successfully userId {}", userId);
             log.info("Image updated successfully userId {}", userId);
             return status(OK).body(userModel);
