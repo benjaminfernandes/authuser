@@ -38,5 +38,5 @@ public class RabbitmqConfig {
     public FanoutExchange fanoutUserEvent(){
         return new FanoutExchange(this.exchangeUserEvent);
     }
-
+    //fanout replica a mensagem a todos
 }
