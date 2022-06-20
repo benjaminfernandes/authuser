@@ -52,6 +52,7 @@ public class UserController {
                                                     direction = Sort.Direction.ASC) Pageable pageable,
                                                        Authentication authentication){
 
+        //Demonstra uma forma de obter o user atual com parametro
         UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.info("Authentication: {}", userDetails.getUsername());
 

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationCurrentUserService {
 
-
+    //Captura o usuário corrente do contexto do spring que foi adicionado na geração do token
     public UserDetailsImpl getCurrentUser(){
         return (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
