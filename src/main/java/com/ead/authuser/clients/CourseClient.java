@@ -12,6 +12,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -35,24 +37,26 @@ public class CourseClient {
 
     //Utilizando API Composition Pattern
     //@Retry(name = "retryInstance", fallbackMethod = "retryfallback")//retentativas de acordo com a config feita no application.yml, caso falhe após as 3 tentativas chama o método no fallbackmethod
-    @CircuitBreaker(name = "circuitbreakerInstance", fallbackMethod = "circuitBreakerfallback") //fallbackMethod rota alterantiva caso erro
-    public Page<CourseDto> getAllCoursesByUser(UUID userId, Pageable pageable){
+    //@CircuitBreaker(name = "circuitbreakerInstance", fallbackMethod = "circuitBreakerfallback") //fallbackMethod rota alterantiva caso erro
+    public Page<CourseDto> getAllCoursesByUser(UUID userId, Pageable pageable, String token){
         //List<CourseDto> searchResult = null;
         ResponseEntity<ResponsePageDto<CourseDto>> result = null;
         String url = requestUriCourse + this.utilsService.createUrl(userId, pageable);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+        HttpEntity<String> requestEntity = new HttpEntity<>("parameters", headers);
+
         log.debug("Request URL: {}", url);
         log.info("Request URL: {}", url);
-        try{
-            ParameterizedTypeReference<ResponsePageDto<CourseDto>> responseType =
-                    new ParameterizedTypeReference<ResponsePageDto<CourseDto>>() {};
 
-            result = this.restTemplate.exchange(url, HttpMethod.GET,null, responseType);
-            //searchResult = result.getBody().getContent();
-            log.debug("Response Number of Elements: {}", result.getBody().getTotalElements());
-        }catch (HttpStatusCodeException e){
-            log.error("Error request /courses {} ", e);
-        }
+        ParameterizedTypeReference<ResponsePageDto<CourseDto>> responseType =
+                  new ParameterizedTypeReference<ResponsePageDto<CourseDto>>() {};
+
+        result = this.restTemplate.exchange(url, HttpMethod.GET, requestEntity, responseType);
+        //searchResult = result.getBody().getContent();
+        log.debug("Response Number of Elements: {}", result.getBody().getTotalElements());
+
         log.info("Ending request /courses userID {}", userId);
         return result.getBody();
     }
