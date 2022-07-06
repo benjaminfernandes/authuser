@@ -36,7 +36,7 @@ public class CourseClient {
     private String requestUriCourse;
 
     //Utilizando API Composition Pattern
-    //@Retry(name = "retryInstance", fallbackMethod = "retryfallback")//retentativas de acordo com a config feita no application.yml, caso falhe após as 3 tentativas chama o método no fallbackmethod
+    //@Retry(name = "retryInstance", fallbackMethod = "retryfallback")//retentativas de acordo com a config feita no application-dev.yml, caso falhe após as 3 tentativas chama o método no fallbackmethod
     //@CircuitBreaker(name = "circuitbreakerInstance", fallbackMethod = "circuitBreakerfallback") //fallbackMethod rota alterantiva caso erro
     public Page<CourseDto> getAllCoursesByUser(UUID userId, Pageable pageable, String token){
         //List<CourseDto> searchResult = null;
