@@ -83,6 +83,42 @@ public class AuthenticationController {
         return status(HttpStatus.CREATED).body(userModel);
     }
 
+    //endpoint provisório
+    @PostMapping("/signup/admin/usr")
+    public ResponseEntity<?> registerUserAdmin(@RequestBody @Validated(UserDto.UserView.RegistrationPost.class)
+                                          @JsonView(UserDto.UserView.RegistrationPost.class)
+                                                  UserDto userDto){
+
+        log.debug("POST registerUser userDto received {}", userDto.toString());
+
+        if(userService.existsByUsername(userDto.getUsername())){
+            log.warn("Username {} is already taken ", userDto.getUsername());
+            return status(HttpStatus.CONFLICT).body("Error: Username is already taken!");
+        }
+
+        if(userService.existsByEmail(userDto.getEmail())){
+            log.warn("Email {} is already taken ", userDto.getEmail());
+            return status(HttpStatus.CONFLICT).body("Error: Email is already taken!");
+        }
+
+        RoleModel roleModel = this.roleService.findByRoleName(RoleType.ROLE_ADMIN)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+        var userModel = new UserModel();
+        BeanUtils.copyProperties(userDto, userModel);
+        userModel.setUserActived();
+        userModel.setUserAsAdmin();
+        //userModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC"))); //adicionado anotação no UserModel
+        //userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        userModel.addRole(roleModel);
+        this.userService.saveUser(userModel);
+        log.debug("RegisterUser UserId saved {}", userModel.getUserId());
+        log.info("Saved successfully userId {}", userModel.getUserId());
+        return status(HttpStatus.CREATED).body(userModel);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<JwtDto> authenticateUser(@Valid @RequestBody LoginDto loginDto){
         Authentication authentication = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
